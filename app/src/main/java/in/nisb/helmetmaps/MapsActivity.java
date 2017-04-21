@@ -1,8 +1,6 @@
 package in.nisb.helmetmaps;
 
 import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -20,6 +18,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +47,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //import com.google.android.gms.location.LocationListener;
 //import com.google.android.gms.location.LocationRequest;
@@ -57,15 +62,15 @@ public class MapsActivity extends AppCompatActivity {
     Marker mCurrLocationMarker;
     Toast t;
 
-    private BluetoothAdapter mBluetoothAdapter = null;
-
+//    private BluetoothAdapter mBluetoothAdapter = null;
+    String ip = "192.168.43.2";
+    String address = "98:D3:31:B4:00:58";
     /**
      * Member object for the chat services
      */
-    private BluetoothChatService mChatService = null;
+//    private BluetoothChatService mChatService = null;
 
     int prec = 5;
-    BluetoothTransfer btt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +82,6 @@ public class MapsActivity extends AppCompatActivity {
         }
         // Initializing
         MarkerPoints = new ArrayList<>();
-        btt = new BluetoothTransfer();
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -250,12 +254,12 @@ public class MapsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mChatService = new BluetoothChatService(getApplicationContext(), null);
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice("54:14:73:55:EE:5D");
-        ToastIt(device.getName());
-        // Attempt to connect to the device
-        mChatService.connect(device, true);
+//        mChatService = new BluetoothChatService(getApplicationContext(), null);
+//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+//        ToastIt(device.getName());
+//        // Attempt to connect to the device
+//        mChatService.connect(device, true);
     }
 
     @Override
@@ -268,21 +272,39 @@ public class MapsActivity extends AppCompatActivity {
         t.show();
     }
 
-    public void sendData(String data){
-        //ToastIt("Send data");
-        //if (btt.btSocket!=null){
-//            try{
-                //btt.btSocket.getOutputStream().write(data.getBytes());
-                byte[] send = data.getBytes();
-                mChatService.write(send);
-          //      ToastIt("Data is sent");
-//            }catch (IOException e){
-//                ToastIt("COuldnt send");
-//            }
-        //}
-        //else {
-          //  ToastIt("Not connected");
-        //}
+//    public void sendData(String data){
+//
+//                byte[] send = data.getBytes();
+//                mChatService.write(send);
+//
+//    }
+
+
+    public void sendData(final String data){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ip,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("turn",data);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 
