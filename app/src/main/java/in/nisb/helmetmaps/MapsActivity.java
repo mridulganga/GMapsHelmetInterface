@@ -84,6 +84,16 @@ public class MapsActivity extends AppCompatActivity {
         MarkerPoints = new ArrayList<>();
 
 
+        Button btnip = (Button) findViewById(R.id.btn_ip);
+        btnip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText e = (EditText) findViewById(R.id.ip_field);
+                ip = "http://" + e.getText().toString();
+                ToastIt("IP : " + ip);
+            }
+        });
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -285,7 +295,8 @@ public class MapsActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                        if (response.length()>0)
+                            Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
