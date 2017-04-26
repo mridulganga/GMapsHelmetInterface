@@ -214,7 +214,7 @@ public class MapsActivity extends AppCompatActivity {
                                         || dir.equals("roundabout-left")
                                         || dir.equals("fork-left")) {
                                     //bluetooth left indicator
-                                    sendData("L");
+                                    sendData("1");
 
                                 } else if (dir.equals("turn-right")
                                         || dir.equals("turn-slight-right")
@@ -223,13 +223,13 @@ public class MapsActivity extends AppCompatActivity {
                                         || dir.equals("roundabout-right")
                                         || dir.equals("fork-right")) {
                                     //bluetooth right indicator
-                                    sendData("R");
+                                    sendData("2");
                                 } else if (dir.equals("uturn-left")) {
                                     //bluetooth uturn left indicator
-                                    sendData("UL");
+                                    sendData("3");
                                 } else if (dir.equals("uturn-right")) {
                                     //uturn right
-                                    sendData("UR");
+                                    sendData("4");
 
                                 }
 
